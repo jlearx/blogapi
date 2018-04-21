@@ -1,5 +1,0 @@
-<?php
-
-print("BLOG API");
-
-?>
