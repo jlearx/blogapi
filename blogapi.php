@@ -65,7 +65,7 @@ class BlogAPI {
 
 	// Defines the posts (GET request) endpoint
 	protected function posts() {
-		if ($this->method == 'GET') {}
+		if ($this->method == 'GET') {
 			// Open the database
 			$blogdb = new BlogDB();
 			
