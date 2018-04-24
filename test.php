@@ -1,4 +1,12 @@
 <?php
+require_once "./blogapi.php";
+
+// Used to add some test records to the DB
+//populate_test_records();
+
+// Used to delete ALL records in the DB 
+//delete_all_records();
+
 
 // Creates test records in the database
 function populate_test_records() {
