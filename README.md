@@ -12,6 +12,19 @@ This API provides basic blog functionality. Specifically, it provides the
 ability to fetch all blog posts from the database and the ability to insert a new blog
 post to the database.
 
+## API Overview
+1. An endpoint for POSTing a single blog post
+  * Endpoint is `/post`
+  * Method *must* be `POST`
+  * Content of the `POST` *must* be the `title` and `body` of the post
+2. An endpoint for GETing all blog posts
+  * Endpoint is `/posts`
+  * Method *must* be `GET`
+  * There should be no content sent (this is a GET request)
+  * Content received is the `post_id`, `title`, and `body` of all posts in an array
+
+All data exchanged with the API *must* be in JSON format.
+
 ## Usage
 The PHP SQLite3 module (**php-sqlite3**) must be installed and enabled for the database to work.
 This can be done on Ubuntu/Debian with: 
