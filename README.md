@@ -34,14 +34,13 @@ If using .htaccess, be sure AllowOverride is set in the virtual host file.
 See the Apache 2.x documentation for more info: 
 https://httpd.apache.org/docs/2.4/mod/core.html#allowoverride
 
-.htaccess file contents:
-
-    `<IfModule mod_rewrite.c>
+#### .htaccess file contents
+    <IfModule mod_rewrite.c>
       RewriteEngine On
       RewriteCond %{REQUEST_FILENAME} !-f
       RewriteCond %{REQUEST_FILENAME} !-d
       RewriteRule blogapi/(.*)$ blogapi/api.php?request=$1 [QSA,NC,L]
-    </IfModule>`
+    </IfModule>
 
 The .htaccess file should be located in the same directory containing the blogapi directory.
 That is, it should NOT be inside the blogapi directory.
