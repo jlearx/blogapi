@@ -28,7 +28,6 @@ $postBlog = false;
 // Requires php-curl
 // Method: POST, PUT, GET etc
 // Data: array("param" => "value") ==> index.php?param=value
-// From: https://stackoverflow.com/questions/9802788/call-a-rest-api-in-php
 function CallAPI($method, $url, $data = false) {
     $curl = curl_init();
 
