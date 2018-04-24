@@ -11,7 +11,7 @@ class BlogAPI {
 	protected $post = Null;
 		
 	// Constructor
-	public function __construct($request) {
+	public function __construct($request, $origin) {
 		// Allow requests from any origin to be processed by this page
 		header("Access-Control-Allow-Orgin: *");
 		// Allow for any HTTP method to be accepted
@@ -56,10 +56,65 @@ class BlogAPI {
 	
 	// Defines the post (POST request) endpoint
 	protected function post() {
-		if ($this->method == 'POST') {
-			return "";
+		if ($this->method == 'POST') {			
+			$data = json_decode($this->post, true);
+
+			// Check for JSON decode failure
+			if ($data == NULL) {
+				return Array('Result' => "Failure", 'Error' => "Post data not JSON encoded.");
+			}
+						
+			// Make sure Title and Body are valid
+			if (!array_key_exists('Title', $data)) {
+				return Array('Result' => "Failure", 'Error' => "Title not set in Post data.");
+			}
+			
+			if (!array_key_exists('Body', $data)) {
+				return Array('Result' => "Failure", 'Error' => "Body not set in Post data.");
+			}
+			
+			$title = $data['Title'];
+			$body = $data['Body'];
+			
+			// Make sure Title and Body are not zero length
+			if (empty($title)) {
+				return Array('Result' => "Failure", 'Error' => "Title must not be empty in Post data.");
+			}
+			
+			if (empty($body)) {
+				return Array('Result' => "Failure", 'Error' => "Body must not be empty in Post data.");
+			}
+			
+			// Open the database
+			$blogdb = new BlogDB();
+			
+			// Exit if database not opened
+			if (!$blogdb) {
+				echo $blogdb->lastErrorMsg();
+				exit;
+			}
+			
+			// Insert into the database
+			$sql =<<<EOF
+				  INSERT INTO posts (title,body) VALUES ("$title","$body");
+EOF;
+
+			$ret = $blogdb->exec($sql);
+			
+			// Store the results
+			$result = Array('Result' => "Success");
+			
+			if (!$ret) {
+				$result = Array('Result' => "Failure", 'Error' => $blogdb->lastErrorMsg());			
+			}
+			
+			// Close the database
+			$blogdb->close();
+			
+			// Return the results
+			return $result;
 		} else {
-			return "Only accepts POST requests.";
+			return Array('Result' => "Failure", 'Error' => "Only accepts POST requests.");
 		}		
 	}
 
@@ -87,9 +142,6 @@ EOF;
 			
 			// For each database row, add it to the result set
 			while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-			  //echo "POST_ID = ". $row['post_id'] . "\n";
-			  //echo "TITLE = ". $row['title'] . "\n";
-			  //echo "BODY = ". $row['body'] . "\n";
 			  $results[] = $row;
 			}
 			
@@ -99,7 +151,7 @@ EOF;
 			// Return the results
 			return $results;
 		} else {
-			return "Only accepts GET requests.";
+			return Array('Result' => "Failure", 'Error' => "Only accepts GET requests.");
 		}
 	}
 	
@@ -110,6 +162,7 @@ EOF;
 	
 	// Returns the endpoint response to the client
     private function _response($data, $status = 200) {
+		header('Content-type: application/json;charset=utf-8');
         header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
 		
         return json_encode($data);
