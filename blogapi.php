@@ -83,12 +83,14 @@ EOF;
 			$ret = $blogdb->query($sql);
 			
 			// Store the results
-			$results = "";
+			$results = array();
 			
+			// For each database row, add it to the result set
 			while($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-			  echo "POST_ID = ". $row['post_id'] . "\n";
-			  echo "TITLE = ". $row['title'] . "\n";
-			  echo "BODY = ". $row['body'] . "\n";
+			  //echo "POST_ID = ". $row['post_id'] . "\n";
+			  //echo "TITLE = ". $row['title'] . "\n";
+			  //echo "BODY = ". $row['body'] . "\n";
+			  $results[] = $row;
 			}
 			
 			// Close the database
