@@ -21,7 +21,7 @@ This can be done on Ubuntu/Debian with:
 *Note: You may need to restart the web server or php-fpm (if applicable) after installing this.*
 
 If using Apache, the API requires the use of a .htaccess file, or alternatively you can insert the lines 
-directly into your virtual host file. Either way, you must have mod_rewrite installed and enabled
+directly into your virtual host file. Either way, you must have **mod_rewrite** installed and enabled
 in Apache.
 
 For Apache 2.x, this can be done by: 
@@ -35,12 +35,13 @@ See the Apache 2.x documentation for more info:
 https://httpd.apache.org/docs/2.4/mod/core.html#allowoverride
 
 .htaccess file contents:
-    <IfModule mod_rewrite.c>
+
+    `<IfModule mod_rewrite.c>
       RewriteEngine On
       RewriteCond %{REQUEST_FILENAME} !-f
       RewriteCond %{REQUEST_FILENAME} !-d
       RewriteRule blogapi/(.*)$ blogapi/api.php?request=$1 [QSA,NC,L]
-    </IfModule>
+    </IfModule>`
 
 The .htaccess file should be located in the same directory containing the blogapi directory.
 That is, it should NOT be inside the blogapi directory.
