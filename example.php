@@ -1,27 +1,41 @@
 <?php
 require_once "./blogapi/blogapi.php";
 
+// Status variables to determine if the buttons were pushed
 $displayBlogs = isset($_GET["GetPosts"]) ? true : false;
 $postBlog = isset($_POST["PostBlog"]) ? true : false;
+
+// Array of blogs to display
 $blogs = array();
 
+// If Get Blogs button was pushed
 if ($displayBlogs) {
 	// Call endpoint posts
 	$response = CallAPI("GET", "http://web.paradisent.com/blogapi/posts");
+	
+	// Decode and store the blog posts array in the blogs variable
 	$blogs = json_decode($response, true);
 } elseif ($postBlog) {
+	// If Post button was pushed
+	// Get the title and body field data
 	$title = htmlspecialchars($_POST["txtTitle"]);
 	$body = htmlspecialchars($_POST["txtBody"]);
 	
+	// Put the title and body into an associative array
 	$blogPost = array("Title" => $title, "Body" => $body);
+	
+	// Encode the array for transport to the API
 	$data = json_encode($blogPost);
 	
 	// Call endpoint post
 	$response = CallAPI("POST", "http://web.paradisent.com/blogapi/post", $data);
+	
+	// Decode and display the response (an error or success message) from the API
 	print_r(json_decode($response, true));
 	print("<p>Blog Post Submitted!</p>");
 }
 
+// Reset the status variables
 $displayBlogs = false;
 $postBlog = false;
 
